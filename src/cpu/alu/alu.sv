@@ -1,3 +1,7 @@
+/* cpu/alu/alu.sv
+ * QUAD.nibble arithmetic-logic unit
+ */
+
 `include "alu_constants.sv"
 import parameters::*;
 

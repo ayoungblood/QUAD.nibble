@@ -1,3 +1,7 @@
+/* cpu/alu/alu_constants.sv
+ * Constants for cpu/alu/alu.sv
+ */
+
 package parameters;
     parameter [3:0]
         ALU_OP_ADD = 4'h0, // add B to A

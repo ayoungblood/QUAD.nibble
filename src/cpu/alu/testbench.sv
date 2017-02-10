@@ -1,5 +1,6 @@
-// Testbench for cpu/alu/alu.sv
-// Author: Akira Youngblood
+/* cpu/alu/testbench.sv
+ * Testbench for cpu/alu/alu.sv
+ */
 
 `include "alu_constants.sv"
 import parameters::*;
