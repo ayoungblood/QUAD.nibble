@@ -104,13 +104,11 @@ ALU instructions that modify the status register:
 - orhi
 - rol
 - roli
-- sll
 - slli
-- srl
 - srli
 - sub
 - subi
-- swp
+- swap
 - xor
 - xori
 - xorhi
@@ -141,7 +139,7 @@ ALU instructions that modify the status register:
 | 0x0       | 0x4         | rB         | rA         | Reg Direct, Dual    | add      | add rB to rA and place result in rA; rA = rA + rB                       |
 | 0x0       | 0x5         | rB         | rA         | Reg Direct, Dual    | sub      | subtract rB from rA and place result in rA; rA = rA - rB                |
 | 0x0       | 0x6         | rB         | rA         | Reg Direct, Dual    | mul      | multiply rB by rA and place result in rA; rA = rA * rB                  |
-| 0x0       | 0x7         | rB         | rA         | Reg Direct, Dual    |          |                                                                         |
+| 0x0       | 0x7         | rB         | rA         | Reg Direct, Dual    | rol      | bitwise left rotate; rA = lrotate(rA,rB)                                   |
 | 0x0       | 0x8         | rB         | rA         | Reg Direct, Dual    | and      | bitwise AND; rA = rA & rB                                               |
 | 0x0       | 0x9         | rB         | rA         | Reg Direct, Dual    | or       | bitwise OR; rA = rA | rB                                                |
 | 0x0       | 0xa         | rB         | rA         | Reg Direct, Dual    | xor      | bitwise XOR; rA = rA ^ rB                                               |
@@ -170,11 +168,11 @@ ALU instructions that modify the status register:
 
 #### add - Add without carry
 
-Adds two registers `rB` and `rA` and places the result in the destination register `rA`.
+Adds register `rB` to register `rA` and places the result in the destination register `rA`.
 
 Operation: `rA <= rB + rA`  
 Program counter: `PC <= PC + 1`  
-16-bit opcode: `0000 0100 BBBB AAAA`
+16-bit opcode: `0000 0100 bbbb aaaa`
 
 #### addi - Add immediate without carry
 
@@ -182,39 +180,39 @@ Adds a register `rA` and 8-bit immediate value `IMM8` and places the result in t
 
 Operation: `rA <= rA + IMM8`  
 Program counter: `PC <= PC + 1`  
-16-bit opcode: `0100 IIII IIII AAAA`
+16-bit opcode: `0100 iiii iiii aaaa`
 
 #### and - Logical AND
 
-Performs a logical bitwise AND on two registers `rB` and `rA` and places in the result in the destination register `rA`.
+Performs a logical AND on two registers `rB` and `rA` and places in the result in the destination register `rA`.
 
 Operation: `rA <= rB & rA`  
 Program counter: `PC <= PC + 1`  
-16-bit opcode: `0000 1000 BBBB AAAA`
+16-bit opcode: `0000 1000 bbbb aaaa`
 
 #### andi - Logical AND immediate
 
-Performs logical bitwise AND on a register `rA` and 8-bit immediate value `IMM8` and places the result in the destination register `rA`.
+Performs a logical AND on a register `rA` and 8-bit immediate value `IMM8` and places the result in the destination register `rA`.
 
 Operation: `rA <= rA & (0x00:IMM8)`  
 Program counter: `PC <= PC + 1`  
-16-bit opcode: `1000 IIII IIII AAAA`
+16-bit opcode: `1000 iiii iiii aaaa`
 
 #### andhi - Logical AND immediate, high half-word
 
-Performs logical bitwise AND on a register `rA` and 8-bit immediate value `IMM8` shifted into the upper half-word and places the result in the destination register `rA`.
+Performs a logical AND on a register `rA` and 8-bit immediate value `IMM8` shifted into the upper half-word and places the result in the destination register `rA`.
 
 Operation: `rA <= rA & (IMM8:0x00)`  
 Program counter: `PC <= PC + 1`  
-16-bit opcode: `1001 IIII IIII AAAA`
+16-bit opcode: `1001 iiii iiii aaaa`
 
 #### mul - Multiply
 
-Multiplies register `rB` with register `rA` and places the result in the destination register `rA`.
+Multiplies register `rB` by register `rA` and places the result in the destination register `rA`.
 
 Operation: `rA <= rB x rA`  
 Program counter: `PC <= PC + 1`  
-16-bit opcode: `0000 0110 BBBB AAAA`
+16-bit opcode: `0000 0110 bbbb aaaa`
 
 #### muli - Multiply immediate
 
@@ -222,4 +220,124 @@ Multiplies register `rA` with 8-bit immediate value `IMM8` and places the result
 
 Operation: `rA <= rA x IMM8`  
 Program counter: `PC <= PC + 1`  
-16-bit opcode: `0110 IIII IIII AAAA`
+16-bit opcode: `0110 iiii iiii aaaa`
+
+#### neg - Two's complement
+
+Replaces the contents of register `rA` with its two's complement; the value 0x8000 is left unchanged.
+
+Operation: `rA <= 0x0000 - rA`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0000 0000 1100 aaaa`
+
+#### nor - Logical NOR
+
+Performs a logical NOR on two registers `rB` and `rA` and places in the result in the destination register `rA`.
+
+Operation: `rA <= ~(rB | rA)`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0000 1011 bbbb aaaa`
+
+#### or - Logical OR
+
+Performs a logical OR on two registers `rB` and `rA` and places in the result in the destination register `rA`.
+
+Operation: `rA <= rB | rA`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0000 0101 bbbb aaaa`
+
+#### ori - Logical OR immediate
+
+Performs a logical OR on a register `rA` and 8-bit immediate value `IMM8` and places the result in the destination register `rA`.
+
+Operation: `rA <= rA | (0x00:IMM8)`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `1010 iiii iiii aaaa`
+
+#### orhi - Logical OR immediate, high half-word
+
+Performs a logical OR on a register `rA` and 8-bit immediate value `IMM8` shifted into the upper half-word and places the result in the destination register `rA`.
+
+Operation: `rA <= rA | (IMM8:0x00)`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `1011 iiii iiii aaaa`
+
+#### rol - Logical left rotate
+
+Performs a logical left rotate on a register `rA`, rotating by `rB` bits to the left.
+
+Operation: `rA <= LROTATE(rA,rB)`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0000 0111 bbbb aaaa`
+
+#### roli - Logical left rotate immediate
+
+Performs a logical left rotate on a register `rA`, rotating by a 4-bit constant value `IMM4`.
+
+Operation: `rA <= LROTATE(rA,IMM4)`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0000 0001 iiii aaaa`
+
+#### slli - Logical left shift immediate
+
+Performs a logical left shift on a register `rA`, shifting by a 4-bit constant value `IMM4`.
+
+Operation: `rA <= rA << IMM4`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0000 0010 iiii aaaa`
+
+#### srli - Logical right shift immediate
+
+Performs a logical right shift on a register `rA`, shifting by a 4-bit constant value `IMM4`.
+
+Operation: `rA <= rA >> IMM4`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0000 0011 iiii aaaa`
+
+#### sub - Subtract
+
+Subtracts register `rB` from register `rA` and places the result in the destination register `rA`.
+
+Operation: `rA <= rA - rB`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0000 0100 bbbb aaaa`
+
+#### subi - Subtract immediate
+
+Subtracts an 8-bit constant value `IMM8` from register `rA` and places the result in the destination register `rA`.
+
+Operation: `rA <= rA - IMM8`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0101 iiii iiii aaaa`
+
+#### swap - Swap nibbles
+
+Swaps the nibbles of a register `rA` and places the result in the destination register `rA`.
+
+Operation: `rA <=  (rA[11:8]:rA[15:12]:rA[3:0]:rA[7:4])`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0000 0000 1101 aaaa`
+
+#### xor - Exclusive-OR
+
+Performs a logical XOR on two registers `rB` and `rA` and places in the result in the destination register `rA`.
+
+Operation: `rA <= rB ^ rA`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `0000 1010 bbbb aaaa`
+
+#### xori - Logical XOR immediate
+
+Performs a logical XOR on a register `rA` and 8-bit immediate value `IMM8` and places the result in the destination register `rA`.
+
+Operation: `rA <= rA ^ (0x00:IMM8)`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `1100 iiii iiii aaaa`
+
+#### xorhi - Logical XOR immediate, high half-word
+
+Performs a logical XOR on a register `rA` and 8-bit immediate value `IMM8` shifted into the upper half-word and places the result in the destination register `rA`.
+
+Operation: `rA <= rA ^ (IMM8:0x00)`  
+Program counter: `PC <= PC + 1`  
+16-bit opcode: `1101 iiii iiii aaaa`
