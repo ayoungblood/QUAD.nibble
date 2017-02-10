@@ -21,37 +21,35 @@ module alu(
             y <= 16'h0;
         end else begin
             case (ctrl)
-                ADD:
+                ALU_OP_ADD:
                     y <= a + b;
-                SUB:
+                ALU_OP_SUB:
                     y <= a - b;
-		MUL:
-			y <= a * b;
-                NEG:
+                ALU_OP_MUL:
+                    y <= a * b;
+                ALU_OP_NEG:
                     y <= ~a + 1;
-                AND:
+                ALU_OP_AND:
                     y <= a & b;
-                OR:
+                ALU_OP_OR:
                     y <= a | b;
-                XOR:
+                ALU_OP_XOR:
                     y <= a ^ b;
-                NOR:
+                ALU_OP_NOR:
                     y <= ~(a | b);
-                SLL:
+                ALU_OP_SLL:
                     y <= a << b;
-                SRL:
+                ALU_OP_SRL:
                     y <= a >> b;
-                ROL:
+                ALU_OP_ROL:
                     y <= {a,a} >> (16-b);
                     // this probably won't synthesize well,
                     // needs to be converted to explicit barrel shifter
-                SWP:
+                ALU_OP_SWP:
                     y <= {a[11:8],a[15:12],a[3:0],a[7:4]};
                 default:
                     y <= 16'h0;
             endcase
-	end
+        end
     end
 endmodule // alu
-
-
