@@ -2,12 +2,15 @@
  * Constants for cpu/alu/alu.sv
  */
 
-package parameters;
+`ifndef _ALU_CONSTANTS_SV
+`define _ALU_CONSTANTS_SV
+
+package constants;
     parameter [3:0]
         ALU_OP_ADD = 4'h0, // add B to A
         ALU_OP_SUB = 4'h1, // subtract B from A
         ALU_OP_MUL = 4'h2, // multiply B by A
-        ALU_OP_NEG = 4'h3, // compute two's complement of A
+        ALU_OP_RSV = 4'h3, // RESERVED
 
         ALU_OP_AND = 4'h4, // bitwise A AND B
         ALU_OP_OR  = 4'h5, // bitwise A OR B
@@ -19,3 +22,5 @@ package parameters;
         ALU_OP_ROL = 4'ha, // right rotate A by B
         ALU_OP_SWP = 4'hb; // swap nibbles of A
 endpackage
+
+`endif // _ALU_CONSTANTS_SV

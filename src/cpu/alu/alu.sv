@@ -3,7 +3,7 @@
  */
 
 `include "alu_constants.sv"
-import parameters::*;
+import constants::*;
 
 module alu(
     input  logic        clk,
@@ -31,7 +31,7 @@ module alu(
                     y <= a - b;
                 ALU_OP_MUL:
                     y <= a * b;
-                ALU_OP_NEG:
+                ALU_OP_RSV: // unused op-code, performs two's complement negation for now
                     y <= ~a + 1;
                 ALU_OP_AND:
                     y <= a & b;
