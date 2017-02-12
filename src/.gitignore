@@ -1,6 +1,7 @@
 # Ignore Modelsim cruft
-*.sv.bak
-*.tcl.bak
-
+# Silly backup files
+*.bak
+# Ignore the work library
+cpu/alu/quad_nibble/
 # We don't need the waveform file
 vsim.wlf
