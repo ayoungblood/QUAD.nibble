@@ -1,0 +1,6 @@
+# Ignore Modelsim cruft
+*.sv.bak
+*.tcl.bak
+
+# We don't need the waveform file
+vsim.wlf
