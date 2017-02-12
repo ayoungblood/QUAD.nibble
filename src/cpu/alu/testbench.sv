@@ -8,10 +8,10 @@ import constants::*;
 module testbench();
     timeunit 1ns/1ns;
 
-    logic clk;
-    logic resetn;
-    logic [3:0] alu_ctrl;
-    logic [15:0] op_a, op_b, result;
+    logic               clk;
+    logic               resetn;
+    logic         [3:0] alu_ctrl;
+    logic signed [15:0] op_a, op_b, result;
     integer expected = 0;
 
     // Generate clock and reset signals
@@ -47,9 +47,8 @@ module testbench();
         // reset everything
         resetn = 1'b0;
         alu_ctrl = 4'h0;
-        op_a = 16'h0;
-        op_b = 16'h0;
-        //result = 16'h0;
+        op_a = 16'sh0;
+        op_b = 16'sh0;
 
         @(posedge clk);
         resetn <= #2 1'b1; // de-assert reset
@@ -406,10 +405,10 @@ endmodule // testbench
 
 // scoreboard
 module int_scoreboard(
-    input logic clk,
-    input logic resetn,
-    input logic [15:0] actual,
-    input integer expected
+    input logic               clk,
+    input logic               resetn,
+    input logic signed [15:0] actual,
+    input integer             expected
 );
     timeunit 1ns/1ns;
     integer errors = 0;

@@ -1,17 +1,18 @@
 /* cpu/alu/alu.sv
  * QUAD.nibble arithmetic-logic unit
+ * Performs 16-bit signed arithmetic as well as bitwise operations
  */
 
 `include "alu_constants.sv"
 import constants::*;
 
 module alu(
-    input  logic        clk,
-    input  logic        resetn,
-    input  logic [3:0]  ctrl,
-    input  logic [15:0] a,
-    input  logic [15:0] b,
-    output logic [15:0] y
+    input  logic               clk,
+    input  logic               resetn,
+    input  logic         [3:0] ctrl,
+    input  logic signed [15:0] a,
+    input  logic signed [15:0] b,
+    output logic signed [15:0] y
 );
     timeunit 1ns;
     timeprecision 1ns;
