@@ -12,7 +12,8 @@ module testbench();
     logic               resetn;
     logic         [3:0] alu_ctrl;
     logic signed [15:0] op_a, op_b, result;
-    integer expected = 0;
+    logic         [4:0] flags; // SVNZC
+    integer             expected = 0;
 
     // Generate clock and reset signals
     always begin
@@ -30,7 +31,12 @@ module testbench();
         .ctrl(alu_ctrl),
         .a(op_a),
         .b(op_b),
-        .y(result)
+        .y(result),
+        .c(flags[0]),
+        .z(flags[1]),
+        .n(flags[2]),
+        .v(flags[3]),
+        .s(flags[4])
     );
 
     // Instantiate scoreboard
@@ -59,6 +65,19 @@ module testbench();
         op_a <= #1 16'h3;
         op_b <= #1 16'h4;
         expected <= op_a + op_b;
+        @(posedge clk);
+        op_a <= #1 16'h4000;
+        op_b <= #1 16'h4000;
+        expected <= op_a + op_b;
+        @(posedge clk);
+        op_a <= #1 16'h0;
+        op_b <= #1 16'h0;
+        expected <= op_a + op_b;
+        @(posedge clk);
+        op_a <= #1 16'h7fff;
+        op_b <= #1 16'h7fff;
+        expected <= op_a + op_b;
+
         @(posedge clk);
         op_a <= #1 16'h8000;
         op_b <= #1 16'h1;

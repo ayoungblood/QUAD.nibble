@@ -7,14 +7,22 @@ add wave -noupdate -radix hexadecimal /testbench/DUT/ctrl
 add wave -noupdate -radix hexadecimal /testbench/DUT/a
 add wave -noupdate -radix hexadecimal /testbench/DUT/b
 add wave -noupdate -radix hexadecimal /testbench/DUT/y
+add wave -noupdate -radix hexadecimal /testbench/DUT/a_reg
+add wave -noupdate -radix hexadecimal /testbench/DUT/b_reg
+add wave -noupdate /testbench/DUT/c
+add wave -noupdate /testbench/DUT/z
+add wave -noupdate /testbench/DUT/n
+add wave -noupdate /testbench/DUT/v
+add wave -noupdate /testbench/DUT/s
 add wave -noupdate -divider Verification
 add wave -noupdate -radix decimal /testbench/op_a
 add wave -noupdate -radix decimal /testbench/op_b
 add wave -noupdate -radix decimal -childformat {{{/testbench/result[15]} -radix hexadecimal} {{/testbench/result[14]} -radix hexadecimal} {{/testbench/result[13]} -radix hexadecimal} {{/testbench/result[12]} -radix hexadecimal} {{/testbench/result[11]} -radix hexadecimal} {{/testbench/result[10]} -radix hexadecimal} {{/testbench/result[9]} -radix hexadecimal} {{/testbench/result[8]} -radix hexadecimal} {{/testbench/result[7]} -radix hexadecimal} {{/testbench/result[6]} -radix hexadecimal} {{/testbench/result[5]} -radix hexadecimal} {{/testbench/result[4]} -radix hexadecimal} {{/testbench/result[3]} -radix hexadecimal} {{/testbench/result[2]} -radix hexadecimal} {{/testbench/result[1]} -radix hexadecimal} {{/testbench/result[0]} -radix hexadecimal}} -radixshowbase 0 -subitemconfig {{/testbench/result[15]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[14]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[13]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[12]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[11]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[10]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[9]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[8]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[7]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[6]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[5]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[4]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[3]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[2]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[1]} {-height 15 -radix hexadecimal -radixshowbase 0} {/testbench/result[0]} {-height 15 -radix hexadecimal -radixshowbase 0}} /testbench/result
 add wave -noupdate -radix decimal /testbench/expected
 add wave -noupdate -radix decimal /testbench/CHECKER/errors
+add wave -noupdate /testbench/flags
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {64 ns} 0}
+WaveRestoreCursors {{Cursor 1} {40 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 183
 configure wave -valuecolwidth 100
