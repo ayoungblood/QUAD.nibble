@@ -14,6 +14,7 @@ module testbench();
     logic signed [15:0] op_a, op_b, result;
     logic         [4:0] flags; // SVNZC
     integer             expected = 0;
+    logic         [4:0] expected_flags = 5'b10;
 
     // Generate clock and reset signals
     always begin
@@ -44,7 +45,9 @@ module testbench();
         .clk(clk),
         .resetn(resetn),
         .actual(result),
-        .expected(expected)
+        .expected(expected),
+        .actual_flags(flags),
+        .expected_flags(expected_flags)
     );
 
     // Stimulus generation
@@ -64,83 +67,101 @@ module testbench();
         alu_ctrl <= #1 ALU_OP_ADD;
         op_a <= #1 16'h3;
         op_b <= #1 16'h4;
-        expected <= op_a + op_b;
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b0;
         @(posedge clk);
         op_a <= #1 16'h4000;
         op_b <= #1 16'h4000;
-        expected <= op_a + op_b;
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b01100;
         @(posedge clk);
         op_a <= #1 16'h0;
         op_b <= #1 16'h0;
-        expected <= op_a + op_b;
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b00010;
         @(posedge clk);
         op_a <= #1 16'h7fff;
         op_b <= #1 16'h7fff;
-        expected <= op_a + op_b;
-
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b01100;
         @(posedge clk);
         op_a <= #1 16'h8000;
         op_b <= #1 16'h1;
-        expected <= op_a + op_b;
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b10100;
         @(posedge clk);
         op_a <= #1 16'h7fff;
         op_b <= #1 16'h8000;
-        expected <= op_a + op_b;
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b10100;
         @(posedge clk);
         op_a <= #1 16'h4000;
         op_b <= #1 16'h4000;
-        expected <= op_a + op_b;
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b01100;
         @(posedge clk);
         op_a <= #1 16'h1;
         op_b <= #1 16'h7fff;
-        expected <= op_a + op_b;
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b01100;
         @(posedge clk);
         op_a <= #1 16'hffff;
         op_b <= #1 16'h8000;
-        expected <= op_a + op_b;
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b11001;
         @(posedge clk);
         op_a <= #1 16'ha000;
         op_b <= #1 16'ha000;
-        expected <= op_a + op_b;
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b11001;
         @(posedge clk);
         op_a <= #1 16'h0;
         op_b <= #1 16'h0;
-        expected <= op_a + op_b;
+        expected <= $signed(op_a + op_b);
+        expected_flags <= #10 5'b00010;
 
         // SUBTRACT
         @(posedge clk);
         alu_ctrl <= #1 ALU_OP_SUB;
         op_a <= #1 16'h3;
         op_b <= #1 16'h4;
-        expected <= op_a - op_b;
+        expected <= $signed(op_a - op_b);
+        expected_flags <= #10 5'b10101;
         @(posedge clk);
         op_a <= #1 16'h8000;
         op_b <= #1 16'h1;
-        expected <= op_a - op_b;
+        expected <= $signed(op_a - op_b);
+        expected_flags <= #10 5'b11000;
         @(posedge clk);
         op_a <= #1 16'h7fff;
         op_b <= #1 16'h8000;
-        expected <= op_a - op_b;
+        expected <= $signed(op_a - op_b);
+        expected_flags <= #10 5'b01101;
         @(posedge clk);
         op_a <= #1 16'h4000;
         op_b <= #1 16'h4000;
-        expected <= op_a - op_b;
+        expected <= $signed(op_a - op_b);
+        expected_flags <= #10 5'b00010;
         @(posedge clk);
         op_a <= #1 16'h1;
         op_b <= #1 16'h7fff;
-        expected <= op_a - op_b;
+        expected <= $signed(op_a - op_b);
+        expected_flags <= #10 5'b10101;
         @(posedge clk);
         op_a <= #1 16'hffff;
         op_b <= #1 16'h8000;
-        expected <= op_a - op_b;
+        expected <= $signed(op_a - op_b);
+        expected_flags <= #10 5'b00000;
         @(posedge clk);
         op_a <= #1 16'ha000;
         op_b <= #1 16'ha000;
-        expected <= op_a - op_b;
+        expected <= $signed(op_a - op_b);
+        expected_flags <= #10 5'b00010;
         @(posedge clk);
         op_a <= #1 16'h0;
         op_b <= #1 16'h0;
-        expected <= op_a - op_b;
+        expected <= $signed(op_a - op_b);
+        expected_flags <= #10 5'b00010;
 
         // MULTIPLY
         @(posedge clk);
@@ -427,22 +448,22 @@ module int_scoreboard(
     input logic               clk,
     input logic               resetn,
     input logic signed [15:0] actual,
-    input integer             expected
+    input integer             expected,
+    input logic         [4:0] actual_flags,
+    input logic         [4:0] expected_flags
 );
     timeunit 1ns/1ns;
     integer errors = 0;
     always begin
-
         // wait for end of reset
         @(posedge clk);
         @(posedge resetn);
         forever begin
             @(posedge clk);
-            if (actual !== expected) begin
-                $display("%m: Error, expected=%d, got=%d at time=%t", expected, actual, $time);
+            if (actual !== expected | actual_flags !== expected_flags) begin
+                $display("%m: Error, expected=%d/%d, got=%d/%d at time=%t", expected, expected_flags, actual, actual_flags, $time);
                 errors += 1;
             end
         end // forever
     end // always
-
 endmodule // scoreboard
