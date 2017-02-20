@@ -140,7 +140,7 @@ module alu(
                     y <= a ^ b;
                 // Logical NOR
                 ALU_OP_NOR:
-                    y <= a ~| b;
+                    y <= ~(a | b);
                 // Logical left shift
                 ALU_OP_SLL:
                     // modulo 16, cannot shift more than 15
