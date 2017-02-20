@@ -1,5 +1,10 @@
 /* cpu/testbench.sv
  * Testbench for cpu/cpu.sv
+ * 
+ * To simulate with Modelsim:
+ *   cd .../src/cpu/
+ *   vlib quad_nibble
+ *   do testbench.tcl
  */
 
 module testbench();
